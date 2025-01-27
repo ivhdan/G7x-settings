@@ -2,25 +2,16 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.2, maximum-scale=2.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>G7X Photo Settings</title>
     <meta name="theme-color" content="#FF9800">
     <link rel="manifest" href="manifest.json">
-   <style>
+    <style>
         :root {
             --primary: #FF9800;
             --background: #333333;
             --card-bg: #424242;
             --text: #ffffff;
-        }
-
-        @media (prefers-color-scheme: light) {
-            :root {
-                --primary: #FF9800;
-                --background: #424242;
-                --card-bg: #333333;
-                --text: #ffffff;
-            }
         }
 
         * {
@@ -34,13 +25,13 @@
             background: var(--background);
             color: var(--text);
             min-height: 100vh;
-            font-size: 24px;
+            font-size: 20px;
         }
 
         .header {
             background: var(--primary);
             color: white;
-            padding: 1.2rem;
+            padding: 1.5rem;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -51,7 +42,8 @@
         }
 
         .header h1 {
-            font-size: 24px;
+            font-size: 28px;
+            font-weight: bold;
         }
 
         .nav {
@@ -62,7 +54,7 @@
             background: var(--card-bg);
             display: flex;
             justify-content: space-around;
-            padding: 0.8rem;
+            padding: 1rem;
             box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
         }
 
@@ -70,77 +62,74 @@
             border: none;
             background: none;
             color: var(--text);
-            padding: 0.8rem;
-            border-radius: 50%;
-            width: 4rem;
-            height: 4rem;
+            width: 5rem;
+            height: 5rem;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: background-color 0.3s;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .nav-btn svg {
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .nav-btn span {
+            font-size: 14px;
+            text-transform: uppercase;
         }
 
         .nav-btn.active {
-            background: var(--primary);
-            color: white;
+            color: var(--primary);
+            transform: scale(1.1);
         }
 
         .container {
-            padding: 1.2rem;
-            padding-bottom: 5rem;
+            padding: 1.5rem;
+            padding-bottom: 7rem;
         }
 
         .card {
             background: var(--card-bg);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.2rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+            border-radius: 16px;
+            padding: 1.8rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
         .card h2 {
             color: var(--primary);
-            margin-bottom: 0.8rem;
-            font-size: 22px;
+            margin-bottom: 1rem;
+            font-size: 26px;
         }
 
         .card p {
-            margin: 0.8rem 0;
+            margin: 1rem 0;
             line-height: 1.6;
-            font-size: 18px;
+            font-size: 20px;
         }
 
         .details {
             display: flex;
             justify-content: space-between;
-            margin-top: 0.8rem;
-            font-size: 16px;
+            margin-top: 1rem;
+            font-size: 18px;
             color: var(--text);
-            opacity: 0.8;
         }
 
         .language-switch {
             background: rgba(255,255,255,0.2);
             border: none;
-            padding: 0.8rem 1.2rem;
-            border-radius: 4px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
             color: white;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 18px;
         }
-</style>
+    </style>
 </head>
 <body>
     <header class="header">
@@ -154,22 +143,34 @@
 
     <nav class="nav">
         <button class="nav-btn active" onclick="showSection('aperture')">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <circle cx="12" cy="12" r="3"></circle>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="8"/>
+                <circle cx="12" cy="12" r="2"/>
+                <line x1="12" y1="4" x2="12" y2="2"/>
+                <line x1="12" y1="22" x2="12" y2="20"/>
+                <line x1="20" y1="12" x2="22" y2="12"/>
+                <line x1="2" y1="12" x2="4" y2="12"/>
             </svg>
+            <span>Apertura</span>
         </button>
         <button class="nav-btn" onclick="showSection('shutter')">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="12" x2="12" y2="6"/>
+                <line x1="12" y1="12" x2="16" y2="14"/>
             </svg>
+            <span>Tempo</span>
         </button>
         <button class="nav-btn" onclick="showSection('scenes')">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                <circle cx="12" cy="13" r="4"></circle>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="6" width="20" height="12" rx="2"/>
+                <circle cx="12" cy="12" r="3"/>
+                <line x1="4" y1="8" x2="6" y2="8"/>
+                <line x1="18" y1="8" x2="20" y2="8"/>
+                <line x1="4" y1="16" x2="6" y2="16"/>
+                <line x1="18" y1="16" x2="20" y2="16"/>
             </svg>
+            <span>Scene</span>
         </button>
     </nav>
 
