@@ -1,4 +1,12 @@
-<style>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G7X Photo Settings</title>
+    <meta name="theme-color" content="#FF9800">
+    <link rel="manifest" href="manifest.json">
+    <style>
         :root {
             --primary: #FF9800;
             --background: #333333;
@@ -17,13 +25,13 @@
             background: var(--background);
             color: var(--text);
             min-height: 100vh;
-            font-size: 40px;  /* Raddoppiato da 20px */
+            font-size: 40px;
         }
 
         .header {
             background: var(--primary);
             color: white;
-            padding: 3rem;  /* Raddoppiato da 1.5rem */
+            padding: 3rem;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -34,7 +42,7 @@
         }
 
         .header h1 {
-            font-size: 56px;  /* Raddoppiato da 28px */
+            font-size: 56px;
             font-weight: bold;
         }
 
@@ -46,7 +54,7 @@
             background: var(--card-bg);
             display: flex;
             justify-content: space-around;
-            padding: 2rem;  /* Raddoppiato da 1rem */
+            padding: 2rem;
             box-shadow: 0 -4px 8px rgba(0,0,0,0.1);
         }
 
@@ -54,23 +62,23 @@
             border: none;
             background: none;
             color: var(--text);
-            width: 10rem;  /* Raddoppiato da 5rem */
-            height: 10rem;  /* Raddoppiato da 5rem */
+            width: 10rem;
+            height: 10rem;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 1rem;  /* Raddoppiato da 0.5rem */
+            gap: 1rem;
             transition: all 0.3s;
         }
 
         .nav-btn svg {
-            width: 5rem;  /* Raddoppiato da 2.5rem */
-            height: 5rem;  /* Raddoppiato da 2.5rem */
+            width: 5rem;
+            height: 5rem;
         }
 
         .nav-btn span {
-            font-size: 28px;  /* Raddoppiato da 14px */
+            font-size: 28px;
             text-transform: uppercase;
         }
 
@@ -80,45 +88,185 @@
         }
 
         .container {
-            padding: 3rem;  /* Raddoppiato da 1.5rem */
-            padding-bottom: 14rem;  /* Raddoppiato da 7rem */
+            padding: 3rem;
+            padding-bottom: 14rem;
         }
 
         .card {
             background: var(--card-bg);
-            border-radius: 32px;  /* Raddoppiato da 16px */
-            padding: 3.6rem;  /* Raddoppiato da 1.8rem */
-            margin-bottom: 3rem;  /* Raddoppiato da 1.5rem */
+            border-radius: 32px;
+            padding: 3.6rem;
+            margin-bottom: 3rem;
             box-shadow: 0 8px 12px rgba(0,0,0,0.1);
         }
 
         .card h2 {
             color: var(--primary);
-            margin-bottom: 2rem;  /* Raddoppiato da 1rem */
-            font-size: 52px;  /* Raddoppiato da 26px */
+            margin-bottom: 2rem;
+            font-size: 52px;
         }
 
         .card p {
-            margin: 2rem 0;  /* Raddoppiato da 1rem */
+            margin: 2rem 0;
             line-height: 1.6;
-            font-size: 40px;  /* Raddoppiato da 20px */
+            font-size: 40px;
         }
 
         .details {
             display: flex;
             justify-content: space-between;
-            margin-top: 2rem;  /* Raddoppiato da 1rem */
-            font-size: 36px;  /* Raddoppiato da 18px */
+            margin-top: 2rem;
+            font-size: 36px;
             color: var(--text);
         }
 
         .language-switch {
             background: rgba(255,255,255,0.2);
             border: none;
-            padding: 2rem 3rem;  /* Raddoppiato da 1rem 1.5rem */
-            border-radius: 16px;  /* Raddoppiato da 8px */
+            padding: 2rem 3rem;
+            border-radius: 16px;
             color: white;
             font-weight: bold;
-            font-size: 36px;  /* Raddoppiato da 18px */
+            font-size: 36px;
         }
-</style>
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>G7X Photo Settings</h1>
+        <button class="language-switch" onclick="toggleLanguage()">IT/EN</button>
+    </header>
+
+    <div class="container" id="content">
+        <!-- Content will be loaded dynamically -->
+    </div>
+
+    <nav class="nav">
+        <button class="nav-btn active" onclick="showSection('aperture')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="8"/>
+                <circle cx="12" cy="12" r="2"/>
+                <line x1="12" y1="4" x2="12" y2="2"/>
+                <line x1="12" y1="22" x2="12" y2="20"/>
+                <line x1="20" y1="12" x2="22" y2="12"/>
+                <line x1="2" y1="12" x2="4" y2="12"/>
+            </svg>
+            <span>Apertura</span>
+        </button>
+        <button class="nav-btn" onclick="showSection('shutter')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="12" x2="12" y2="6"/>
+                <line x1="12" y1="12" x2="16" y2="14"/>
+            </svg>
+            <span>Tempo</span>
+        </button>
+        <button class="nav-btn" onclick="showSection('scenes')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="6" width="20" height="12" rx="2"/>
+                <circle cx="12" cy="12" r="3"/>
+                <line x1="4" y1="8" x2="6" y2="8"/>
+                <line x1="18" y1="8" x2="20" y2="8"/>
+                <line x1="4" y1="16" x2="6" y2="16"/>
+                <line x1="18" y1="16" x2="20" y2="16"/>
+            </svg>
+            <span>Scene</span>
+        </button>
+    </nav>
+
+    <script>
+        // Data
+        const data = {
+            it: {
+                aperture: [
+                    { value: 'f/1.8', conditions: 'Poca luce, effetto bokeh', iso: '100-400', shutter: '1/60-1/250' },
+                    { value: 'f/2.8-4', conditions: 'Uso generale, ritratti', iso: '100-400', shutter: '1/125-1/500' },
+                    { value: 'f/5.6', conditions: 'Paesaggi, maggiore profondità', iso: '100-200', shutter: '1/60-1/250' },
+                    { value: 'f/8', conditions: 'Massima nitidezza, HDR', iso: '100', shutter: '1/30-1/125' }
+                ],
+                shutter: [
+                    { value: '1/1000+', conditions: 'Azione veloce, sport', iso: '400-800', aperture: 'f/1.8-4' },
+                    { value: '1/125-1/500', conditions: 'Uso generale', iso: '100-400', aperture: 'f/2.8-5.6' },
+                    { value: '1/60-1/125', conditions: 'Soggetti statici', iso: '100-200', aperture: 'f/4-8' },
+                    { value: '<1/30', conditions: 'Richiesto treppiede', iso: '100', aperture: 'f/5.6-8' }
+                ],
+                scenes: [
+                    { value: 'Paesaggio', settings: 'f/8, ISO 100, bracketing se necessario' },
+                    { value: 'Street', settings: 'f/5.6, ISO 400, 1/125s' },
+                    { value: 'Poca Luce', settings: 'f/1.8, ISO 800, 1/60s' },
+                    { value: 'HDR', settings: 'f/8, ISO 100, ±2 stop' }
+                ]
+            },
+            en: {
+                aperture: [
+                    { value: 'f/1.8', conditions: 'Low light, bokeh effect', iso: '100-400', shutter: '1/60-1/250' },
+                    { value: 'f/2.8-4', conditions: 'General purpose, portraits', iso: '100-400', shutter: '1/125-1/500' },
+                    { value: 'f/5.6', conditions: 'Landscapes, more depth', iso: '100-200', shutter: '1/60-1/250' },
+                    { value: 'f/8', conditions: 'Maximum sharpness, HDR', iso: '100', shutter: '1/30-1/125' }
+                ],
+                shutter: [
+                    { value: '1/1000+', conditions: 'Fast action, sports', iso: '400-800', aperture: 'f/1.8-4' },
+                    { value: '1/125-1/500', conditions: 'General purpose', iso: '100-400', aperture: 'f/2.8-5.6' },
+                    { value: '1/60-1/125', conditions: 'Static subjects', iso: '100-200', aperture: 'f/4-8' },
+                    { value: '<1/30', conditions: 'Tripod required', iso: '100', aperture: 'f/5.6-8' }
+                ],
+                scenes: [
+                    { value: 'Landscape', settings: 'f/8, ISO 100, bracket if needed' },
+                    { value: 'Street', settings: 'f/5.6, ISO 400, 1/125s' },
+                    { value: 'Low Light', settings: 'f/1.8, ISO 800, 1/60s' },
+                    { value: 'HDR', settings: 'f/8, ISO 100, ±2 stops' }
+                ]
+            }
+        };
+
+        let currentLanguage = 'it';
+        let currentSection = 'aperture';
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'it' ? 'en' : 'it';
+            showSection(currentSection);
+        }
+
+        function showSection(section) {
+            currentSection = section;
+            const content = document.getElementById('content');
+            content.innerHTML = '';
+
+            // Update active button
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[onclick="showSection('${section}')"]`).classList.add('active');
+
+            data[currentLanguage][section].forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                
+                const html = `
+                    <h2>${item.value}</h2>
+                    <p>${item.conditions || item.settings}</p>
+                    ${item.iso ? `
+                        <div class="details">
+                            <span>ISO: ${item.iso}</span>
+                            <span>${item.shutter ? 'Tempo: '+item.shutter : 'Diaframma: '+item.aperture}</span>
+                        </div>
+                    ` : ''}
+                `;
+                
+                card.innerHTML = html;
+                content.appendChild(card);
+            });
+        }
+
+        // Initial load
+        showSection('aperture');
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(function(registration) {
+                console.log('ServiceWorker registration successful');
+            }).catch(function(err) {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
