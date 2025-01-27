@@ -1,0 +1,395 @@
+```html
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>G7X Photo Settings</title>
+    <meta name="theme-color" content="#FF9800">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        :root {
+            --primary: #FF9800;
+            --background: #333333;
+            --card-bg: #424242;
+            --text: #ffffff;
+        }
+
+        @media (prefers-color-scheme: light) {
+            :root {
+                --primary: #FF9800;
+                --background: #424242;
+                --card-bg: #333333;
+                --text: #ffffff;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn {
+            border: none;
+            background: none;
+            color: var(--text);
+            padding: 0.5rem;
+            border-radius: 50%;
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s;
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .container {
+            padding: 1rem;
+            padding-bottom: 4rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .card h2 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            margin: 0.5rem 0;
+            line-height: 1.4;
+        }
+
+        .details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .language-switch {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>G7X Photo Settings</h1>
+        <button class="language-switch" onclick="toggleLanguage()">IT/EN</button>
+    </header>
+
+    <div class="container" id="content">
+        <!-- Content will be loaded dynamically -->
+    </div>
+
+    <nav class="nav">
+        <button class="nav-btn active" onclick="showSection('aperture')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+        </button>
+        <button class="nav-btn" onclick="showSection('shutter')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+        </button>
+        <button class="nav-btn" onclick="showSection('scenes')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+        </button>
+    </nav>
+
+    <script>
+        // Data
+        const data = {
+            it: {
+                aperture: [
+                    { value: 'f/1.8', conditions: 'Poca luce, effetto bokeh', iso: '100-400', shutter: '1/60-1/250' },
+                    { value: 'f/2.8-4', conditions: 'Uso generale, ritratti', iso: '100-400', shutter: '1/125-1/500' },
+                    { value: 'f/5.6', conditions: 'Paesaggi, maggiore profondità', iso: '100-200', shutter: '1/60-1/250' },
+                    { value: 'f/8', conditions: 'Massima nitidezza, HDR', iso: '100', shutter: '1/30-1/125' }
+                ],
+                shutter: [
+                    { value: '1/1000+', conditions: 'Azione veloce, sport', iso: '400-800', aperture: 'f/1.8-4' },
+                    { value: '1/125-1/500', conditions: 'Uso generale', iso: '100-400', aperture: 'f/2.8-5.6' },
+                    { value: '1/60-1/125', conditions: 'Soggetti statici', iso: '100-200', aperture: 'f/4-8' },
+                    { value: '<1/30', conditions: 'Richiesto treppiede', iso: '100', aperture: 'f/5.6-8' }
+                ],
+                scenes: [
+                    { value: 'Paesaggio', settings: 'f/8, ISO 100, bracketing se necessario' },
+                    { value: 'Street', settings: 'f/5.6, ISO 400, 1/125s' },
+                    { value: 'Poca Luce', settings: 'f/1.8, ISO 800, 1/60s' },
+                    { value: 'HDR', settings: 'f/8, ISO 100, ±2 stop' }
+                ]
+            },
+            en: {
+                aperture: [
+                    { value: 'f/1.8', conditions: 'Low light, bokeh effect', iso: '100-400', shutter: '1/60-1/250' },
+                    { value: 'f/2.8-4', conditions: 'General purpose, portraits', iso: '100-400', shutter: '1/125-1/500' },
+                    { value: 'f/5.6', conditions: 'Landscapes, more depth', iso: '100-200', shutter: '1/60-1/250' },
+                    { value: 'f/8', conditions: 'Maximum sharpness, HDR', iso: '100', shutter: '1/30-1/125' }
+                ],
+                shutter: [
+                    { value: '1/1000+', conditions: 'Fast action, sports', iso: '400-800', aperture: 'f/1.8-4' },
+                    { value: '1/125-1/500', conditions: 'General purpose', iso: '100-400', aperture: 'f/2.8-5.6' },
+                    { value: '1/60-1/125', conditions: 'Static subjects', iso: '100-200', aperture: 'f/4-8' },
+                    { value: '<1/30', conditions: 'Tripod required', iso: '100', aperture: 'f/5.6-8' }
+                ],
+                scenes: [
+                    { value: 'Landscape', settings: 'f/8, ISO 100, bracket if needed' },
+                    { value: 'Street', settings: 'f/5.6, ISO 400, 1/125s' },
+                    { value: 'Low Light', settings: 'f/1.8, ISO 800, 1/60s' },
+                    { value: 'HDR', settings: 'f/8, ISO 100, ±2 stops' }
+                ]
+            }
+        };
+
+        let currentLanguage = 'it';
+        let currentSection = 'aperture';
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'it' ? 'en' : 'it';
+            showSection(currentSection);
+        }
+
+        function showSection(section) {
+            currentSection = section;
+            const content = document.getElementById('content');
+            content.innerHTML = '';
+
+            // Update active button
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[onclick="showSection('${section}')"]`).classList.add('active');
+
+            data[currentLanguage][section].forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                
+                const html = `
+                    <h2>${item.value}</h2>
+                    <p>${item.conditions || item.settings}</p>
+                    ${item.iso ? `
+                        <div class="details">
+                            <span>ISO: ${item.iso}</span>
+                            <span>${item.shutter ? 'Tempo: '+item.shutter : 'Diaframma: '+item.aperture}</span>
+                        </div>
+                    ` : ''}
+                `;
+                
+                card.innerHTML = html;
+                content.appendChild(card);
+            });
+        }
+
+        // Initial load
+        showSection('aperture');
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').then(function(registration) {
+                console.log('ServiceWorker registration successful');
+            }).catch(function(err) {
+                console.log('ServiceWorker registration failed: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
+```
+
+2. **manifest.json** - Copia tutto questo codice:
+
+```json
+{
+    "name": "G7X Photo Settings",
+    "short_name": "G7X Settings",
+    "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#333333",
+    "theme_color": "#FF9800",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "icons/icon-72x72.png",
+            "sizes": "72x72",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/icon-96x96.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/icon-128x128.png",
+            "sizes": "128x128",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/icon-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/icon-152x152.png",
+            "sizes": "152x152",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
+```
+
+3. **sw.js** - Copia tutto questo codice:
+
+```javascript
+const CACHE_NAME = 'g7x-settings-v1';
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/icons/icon-72x72.png',
+  '/icons/icon-96x96.png',
+  '/icons/icon-128x128.png',
+  '/icons/icon-144x144.png',
+  '/icons/icon-152x152.png',
+  '/icons/icon-192x192.png',
+  '/icons/icon-384x384.png',
+  '/icons/icon-512x512.png'
+];
+
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        return cache.addAll(urlsToCache);
+      })
+  );
+});
+
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        // Cache hit - return response
+        if (response) {
+          return response;
+        }
+
+        return fetch(event.request).then(
+          response => {
+            // Check if we received a valid response
+            if(!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+
+            // Clone the response
+            const responseToCache = response.clone();
+
+            caches.open(CACHE_NAME)
+              .then(cache => {
+                cache.put(event.request, responseToCache);
+              });
+
+            return response;
+          }
+        );
+      })
+    );
+});
+
+self.addEventListener('activate', event => {
+  const cacheWhitelist = [CACHE_NAME];
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});
+```
