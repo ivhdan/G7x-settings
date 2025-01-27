@@ -46,6 +46,18 @@
             font-weight: bold;
         }
 
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
         .nav {
             position: fixed;
             bottom: 0;
@@ -77,6 +89,11 @@
             height: 5rem;
         }
 
+        .nav-btn.active svg {
+            animation: pulse 2s infinite ease-in-out;
+            color: var(--primary);
+        }
+
         .nav-btn span {
             font-size: 28px;
             text-transform: uppercase;
@@ -84,7 +101,6 @@
 
         .nav-btn.active {
             color: var(--primary);
-            transform: scale(1.1);
         }
 
         .container {
@@ -108,16 +124,54 @@
 
         .card p {
             margin: 2rem 0;
-            line-height: 1.6;
-            font-size: 40px;
+            line-height: 1.4;
+            font-size: 36px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .details {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 2rem;
             margin-top: 2rem;
-            font-size: 36px;
+            font-size: 42px;
             color: var(--text);
+            font-weight: bold;
+        }
+
+        .progress-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 1.5rem;
+            background: var(--background);
+            border-radius: 1rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 1rem;
+            transition: width 0.3s ease;
+        }
+
+        .value-label {
+            font-size: 36px;
+            opacity: 0.8;
         }
 
         .language-switch {
@@ -175,7 +229,6 @@
     </nav>
 
     <script>
-        // Data
         const data = {
             it: {
                 aperture: [
@@ -222,6 +275,16 @@
         let currentLanguage = 'it';
         let currentSection = 'aperture';
 
+        function getApertureProgress(value) {
+            const number = parseFloat(value.replace('f/', '').split('-')[0]);
+            return Math.max(0, Math.min(100, (8 - number) / (8 - 1.8) * 100));
+        }
+
+        function getISOProgress(value) {
+            const number = parseInt(value.split('-')[0]);
+            return Math.max(0, Math.min(100, (number - 100) / (800 - 100) * 100));
+        }
+
         function toggleLanguage() {
             currentLanguage = currentLanguage === 'it' ? 'en' : 'it';
             showSection(currentSection);
@@ -232,7 +295,6 @@
             const content = document.getElementById('content');
             content.innerHTML = '';
 
-            // Update active button
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelector(`[onclick="showSection('${section}')"]`).classList.add('active');
 
@@ -245,7 +307,26 @@
                     <p>${item.conditions || item.settings}</p>
                     ${item.iso ? `
                         <div class="details">
-                            <span>ISO: ${item.iso}</span>
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span>f/1.8</span>
+                                    <span class="value-label">${item.value}</span>
+                                    <span>f/8</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${getApertureProgress(item.value)}%"></div>
+                                </div>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span>ISO 100</span>
+                                    <span class="value-label">ISO ${item.iso}</span>
+                                    <span>ISO 800</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${getISOProgress(item.iso)}%"></div>
+                                </div>
+                            </div>
                             <span>${item.shutter ? 'Tempo: '+item.shutter : 'Diaframma: '+item.aperture}</span>
                         </div>
                     ` : ''}
