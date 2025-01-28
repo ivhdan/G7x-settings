@@ -1,11 +1,9 @@
 /**
  * Utility functions for photo settings app
  */
-
 import { 
     data, 
-    currentLanguage, 
-    currentSection,
+    state,
     getApertureSegments, 
     getApertureProgress, 
     getISOProgress 
@@ -109,14 +107,16 @@ function generateCardContent(item, section) {
  * @param {string} section - Section to display ('aperture', 'shutter', or 'scenes')
  */
 function showSection(section) {
-    currentSection = section;
+    state.currentSection = section;
     const content = document.getElementById('content');
     content.innerHTML = '';
 
-    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelector(`[onclick="showSection('${section}')"]`).classList.add('active');
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        const isActive = btn.dataset.section === section;
+        btn.classList.toggle('active', isActive);
+    });
 
-    data[currentLanguage][section].forEach(item => {
+    data[state.currentLanguage][section].forEach(item => {
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = generateCardContent(item, section);
