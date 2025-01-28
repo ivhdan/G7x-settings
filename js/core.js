@@ -2,10 +2,7 @@
  * Core functions for photo settings app
  */
 
-let currentLanguage = 'it';
-let currentSection = 'aperture';
-
-const data = {
+export const data = {
     it: {
         aperture: [
             { value: 'f/1.8', conditions: 'Poca luce, effetto bokeh', iso: '100-400', shutter: '1/60-1/250' },
@@ -48,12 +45,18 @@ const data = {
     }
 };
 
+// Gestione dello stato dell'applicazione
+export const state = {
+    currentLanguage: 'it',
+    currentSection: 'aperture'
+};
+
 /**
  * Calculates aperture segments states based on aperture value
  * @param {string} value - The aperture value (e.g., 'f/1.8')
  * @returns {string[]} Array of segment states ('active', 'past', or '')
  */
-function getApertureSegments(value) {
+export function getApertureSegments(value) {
     const apertures = ['1.8', '2.8', '4', '5.6', '8'];
     const currentValue = parseFloat(value.replace('f/', '').split('-')[0]);
     const currentIndex = apertures.findIndex(a => parseFloat(a) >= currentValue);
@@ -70,7 +73,7 @@ function getApertureSegments(value) {
  * @param {string} value - The aperture value (e.g., 'f/1.8')
  * @returns {number} Progress percentage (0-100)
  */
-function getApertureProgress(value) {
+export function getApertureProgress(value) {
     const number = parseFloat(value.replace('f/', '').split('-')[0]);
     return Math.max(0, Math.min(100, (8 - number) / (8 - 1.8) * 100));
 }
@@ -80,26 +83,16 @@ function getApertureProgress(value) {
  * @param {string} value - The ISO value (e.g., '100-400')
  * @returns {number} Progress percentage (0-100)
  */
-function getISOProgress(value) {
+export function getISOProgress(value) {
     const number = parseInt(value.split('-')[0]);
     return Math.max(0, Math.min(100, (number - 100) / (800 - 100) * 100));
 }
 
 /**
  * Toggles between Italian and English languages
+ * @param {Function} updateUI - Callback function to update the UI
  */
-function toggleLanguage() {
-    currentLanguage = currentLanguage === 'it' ? 'en' : 'it';
-    showSection(currentSection);
+export function toggleLanguage(updateUI) {
+    state.currentLanguage = state.currentLanguage === 'it' ? 'en' : 'it';
+    updateUI(state.currentSection);
 }
-
-// Export functions and variables
-export {
-    data,
-    currentLanguage,
-    currentSection,
-    getApertureSegments,
-    getApertureProgress,
-    getISOProgress,
-    toggleLanguage
-};
