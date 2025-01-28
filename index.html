@@ -47,15 +47,9 @@
         }
 
         @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-            }
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
 
         .nav {
@@ -183,12 +177,50 @@
             font-weight: bold;
             font-size: 36px;
         }
+
+        /* Stili per la barra segmentata */
+        .segments-container {
+            display: flex;
+            width: 100%;
+            height: 2rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .segment {
+            flex: 1;
+            height: 100%;
+            background: #4A4A4A;
+            border-right: 2px solid var(--background);
+            transition: background-color 0.3s ease;
+        }
+
+        .segment:last-child {
+            border-right: none;
+        }
+
+        .segment.active {
+            background: var(--primary);
+        }
+
+        .segment.past {
+            background: #333333;
+        }
+
+        .aperture-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 32px;
+            margin-top: 0.5rem;
+            color: var(--text);
+        }
     </style>
 </head>
 <body>
     <header class="header">
         <h1>G7X Photo Settings</h1>
-        <button class="language-switch" onclick="toggleLanguage()">IT/EN</button>
+        <button class="language-switch" id="langToggle">IT/EN</button>
     </header>
 
     <div class="container" id="content">
@@ -196,7 +228,7 @@
     </div>
 
     <nav class="nav">
-        <button class="nav-btn active" onclick="showSection('aperture')">
+        <button class="nav-btn active" data-section="aperture">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="8"/>
                 <circle cx="12" cy="12" r="2"/>
@@ -207,7 +239,7 @@
             </svg>
             <span>Apertura</span>
         </button>
-        <button class="nav-btn" onclick="showSection('shutter')">
+        <button class="nav-btn" data-section="shutter">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="12" cy="12" r="10"/>
                 <line x1="12" y1="12" x2="12" y2="6"/>
@@ -215,7 +247,7 @@
             </svg>
             <span>Tempo</span>
         </button>
-        <button class="nav-btn" onclick="showSection('scenes')">
+        <button class="nav-btn" data-section="scenes">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="2" y="6" width="20" height="12" rx="2"/>
                 <circle cx="12" cy="12" r="3"/>
@@ -228,116 +260,22 @@
         </button>
     </nav>
 
-    <script>
-        const data = {
-            it: {
-                aperture: [
-                    { value: 'f/1.8', conditions: 'Poca luce, effetto bokeh', iso: '100-400', shutter: '1/60-1/250' },
-                    { value: 'f/2.8-4', conditions: 'Uso generale, ritratti', iso: '100-400', shutter: '1/125-1/500' },
-                    { value: 'f/5.6', conditions: 'Paesaggi, maggiore profondità', iso: '100-200', shutter: '1/60-1/250' },
-                    { value: 'f/8', conditions: 'Massima nitidezza, HDR', iso: '100', shutter: '1/30-1/125' }
-                ],
-                shutter: [
-                    { value: '1/1000+', conditions: 'Azione veloce, sport', iso: '400-800', aperture: 'f/1.8-4' },
-                    { value: '1/125-1/500', conditions: 'Uso generale', iso: '100-400', aperture: 'f/2.8-5.6' },
-                    { value: '1/60-1/125', conditions: 'Soggetti statici', iso: '100-200', aperture: 'f/4-8' },
-                    { value: '<1/30', conditions: 'Richiesto treppiede', iso: '100', aperture: 'f/5.6-8' }
-                ],
-                scenes: [
-                    { value: 'Paesaggio', settings: 'f/8, ISO 100, bracketing se necessario' },
-                    { value: 'Street', settings: 'f/5.6, ISO 400, 1/125s' },
-                    { value: 'Poca Luce', settings: 'f/1.8, ISO 800, 1/60s' },
-                    { value: 'HDR', settings: 'f/8, ISO 100, ±2 stop' }
-                ]
-            },
-            en: {
-                aperture: [
-                    { value: 'f/1.8', conditions: 'Low light, bokeh effect', iso: '100-400', shutter: '1/60-1/250' },
-                    { value: 'f/2.8-4', conditions: 'General purpose, portraits', iso: '100-400', shutter: '1/125-1/500' },
-                    { value: 'f/5.6', conditions: 'Landscapes, more depth', iso: '100-200', shutter: '1/60-1/250' },
-                    { value: 'f/8', conditions: 'Maximum sharpness, HDR', iso: '100', shutter: '1/30-1/125' }
-                ],
-                shutter: [
-                    { value: '1/1000+', conditions: 'Fast action, sports', iso: '400-800', aperture: 'f/1.8-4' },
-                    { value: '1/125-1/500', conditions: 'General purpose', iso: '100-400', aperture: 'f/2.8-5.6' },
-                    { value: '1/60-1/125', conditions: 'Static subjects', iso: '100-200', aperture: 'f/4-8' },
-                    { value: '<1/30', conditions: 'Tripod required', iso: '100', aperture: 'f/5.6-8' }
-                ],
-                scenes: [
-                    { value: 'Landscape', settings: 'f/8, ISO 100, bracket if needed' },
-                    { value: 'Street', settings: 'f/5.6, ISO 400, 1/125s' },
-                    { value: 'Low Light', settings: 'f/1.8, ISO 800, 1/60s' },
-                    { value: 'HDR', settings: 'f/8, ISO 100, ±2 stops' }
-                ]
-            }
-        };
+    <script type="module">
+        import { showSection } from './js/utils.js';
+        import { toggleLanguage } from './js/core.js';
 
-        let currentLanguage = 'it';
-        let currentSection = 'aperture';
-
-        function getApertureProgress(value) {
-            const number = parseFloat(value.replace('f/', '').split('-')[0]);
-            return Math.max(0, Math.min(100, (8 - number) / (8 - 1.8) * 100));
-        }
-
-        function getISOProgress(value) {
-            const number = parseInt(value.split('-')[0]);
-            return Math.max(0, Math.min(100, (number - 100) / (800 - 100) * 100));
-        }
-
-        function toggleLanguage() {
-            currentLanguage = currentLanguage === 'it' ? 'en' : 'it';
-            showSection(currentSection);
-        }
-
-        function showSection(section) {
-            currentSection = section;
-            const content = document.getElementById('content');
-            content.innerHTML = '';
-
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`[onclick="showSection('${section}')"]`).classList.add('active');
-
-            data[currentLanguage][section].forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                
-                const html = `
-                    <h2>${item.value}</h2>
-                    <p>${item.conditions || item.settings}</p>
-                    ${item.iso ? `
-                        <div class="details">
-                            <div class="progress-container">
-                                <div class="progress-label">
-                                    <span>f/1.8</span>
-                                    <span class="value-label">${item.value}</span>
-                                    <span>f/8</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: ${getApertureProgress(item.value)}%"></div>
-                                </div>
-                            </div>
-                            <div class="progress-container">
-                                <div class="progress-label">
-                                    <span>ISO 100</span>
-                                    <span class="value-label">ISO ${item.iso}</span>
-                                    <span>ISO 800</span>
-                                </div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: ${getISOProgress(item.iso)}%"></div>
-                                </div>
-                            </div>
-                            <span>${item.shutter ? 'Tempo: '+item.shutter : 'Diaframma: '+item.aperture}</span>
-                        </div>
-                    ` : ''}
-                `;
-                
-                card.innerHTML = html;
-                content.appendChild(card);
+        // Gestione click sui pulsanti di navigazione
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const section = btn.dataset.section;
+                showSection(section);
             });
-        }
+        });
 
-        // Initial load
+        // Gestione cambio lingua
+        document.getElementById('langToggle').addEventListener('click', toggleLanguage);
+
+        // Inizializzazione
         showSection('aperture');
 
         // Service Worker Registration
