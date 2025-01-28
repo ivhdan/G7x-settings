@@ -273,7 +273,9 @@
         });
 
         // Gestione cambio lingua
-        document.getElementById('langToggle').addEventListener('click', toggleLanguage);
+        document.getElementById('langToggle').addEventListener('click', () => {
+            toggleLanguage(showSection);
+        });
 
         // Inizializzazione
         showSection('aperture');
